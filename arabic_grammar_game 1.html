@@ -1,0 +1,1286 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ism-color: #185FA5;
+    --ism-light: #E6F1FB;
+    --ism-border: #378ADD;
+    --fil-color: #3B6D11;
+    --fil-light: #EAF3DE;
+    --fil-border: #639922;
+    --hrf-color: #993556;
+    --hrf-light: #FBEAF0;
+    --hrf-border: #D4537E;
+    --gold: #BA7517;
+    --gold-light: #FAEEDA;
+  }
+
+  body { font-family: 'Cairo', sans-serif; direction: rtl; background: transparent; }
+
+  .game-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 1rem 0.5rem;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .game-title {
+    font-family: 'Amiri', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+  }
+
+  .game-subtitle {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  .score-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg);
+    padding: 10px 16px;
+    margin-bottom: 1.5rem;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .score-item {
+    text-align: center;
+  }
+
+  .score-label {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    display: block;
+  }
+
+  .score-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .score-value.stars { color: var(--gold); }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 8px 10px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .tab-btn:hover { background: var(--color-background-secondary); }
+
+  .tab-btn.active-ism { background: var(--ism-light); border-color: var(--ism-border); color: var(--ism-color); }
+  .tab-btn.active-fil { background: var(--fil-light); border-color: var(--fil-border); color: var(--fil-color); }
+  .tab-btn.active-hrf { background: var(--hrf-light); border-color: var(--hrf-border); color: var(--hrf-color); }
+  .tab-btn.active-signs { background: var(--gold-light); border-color: var(--gold); color: var(--gold); }
+  .tab-btn.active-challenge { background: #E1F5EE; border-color: #1D9E75; color: #0F6E56; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* INFO CARDS */
+  .info-section {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .type-badge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+
+  .badge-ism { background: var(--ism-light); color: var(--ism-color); }
+  .badge-fil { background: var(--fil-light); color: var(--fil-color); }
+  .badge-hrf { background: var(--hrf-light); color: var(--hrf-color); }
+
+  .type-icon {
+    font-size: 22px;
+  }
+
+  .info-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .info-desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  .signs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+  }
+
+  .sign-card {
+    padding: 10px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    text-align: center;
+    background: var(--color-background-secondary);
+  }
+
+  .sign-emoji { font-size: 20px; margin-bottom: 4px; }
+  .sign-name { font-size: 12px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 2px; }
+  .sign-example { font-size: 11px; color: var(--color-text-secondary); font-family: 'Amiri', serif; }
+
+  .examples-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .example-word {
+    font-family: 'Amiri', serif;
+    font-size: 18px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .word-ism { background: var(--ism-light); color: var(--ism-color); }
+  .word-fil { background: var(--fil-light); color: var(--fil-color); }
+  .word-hrf { background: var(--hrf-light); color: var(--hrf-color); }
+
+  /* QUIZ */
+  .quiz-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .quiz-progress {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .quiz-progress-bar {
+    height: 4px;
+    background: var(--color-background-secondary);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ism-color), var(--fil-color));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .quiz-question {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+  }
+
+  .quiz-word {
+    font-family: 'Amiri', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+    direction: rtl;
+  }
+
+  .quiz-hint {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .quiz-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .option-btn {
+    padding: 14px 8px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .option-btn:hover:not(:disabled) { background: var(--color-background-secondary); transform: translateY(-2px); }
+  .option-btn:disabled { cursor: default; }
+
+  .option-icon { font-size: 20px; }
+
+  .option-btn.correct { background: var(--fil-light); border-color: var(--fil-border); color: var(--fil-color); }
+  .option-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+
+  .feedback-msg {
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 24px;
+    margin-bottom: 8px;
+  }
+
+  .feedback-msg.correct-msg { color: var(--fil-color); }
+  .feedback-msg.wrong-msg { color: #A32D2D; }
+
+  .next-btn {
+    padding: 10px 28px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    display: none;
+    transition: all 0.15s;
+  }
+
+  .next-btn:hover { background: var(--color-background-primary); }
+
+  /* DRAG SORT GAME */
+  .sort-container {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .sort-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .sort-subtitle {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px;
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    min-height: 60px;
+    margin-bottom: 16px;
+    justify-content: center;
+  }
+
+  .draggable-word {
+    font-family: 'Amiri', serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1.5px dashed var(--color-border-secondary);
+    background: var(--color-background-primary);
+    cursor: grab;
+    color: var(--color-text-primary);
+    user-select: none;
+    transition: all 0.15s;
+  }
+
+  .draggable-word:hover { transform: scale(1.05); }
+  .draggable-word.dragging { opacity: 0.4; }
+
+  .drop-zones {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .drop-zone {
+    border-radius: var(--border-radius-md);
+    border: 2px dashed var(--color-border-secondary);
+    padding: 12px 8px;
+    min-height: 100px;
+    transition: all 0.2s;
+  }
+
+  .drop-zone.zone-ism { border-color: var(--ism-border); background: var(--ism-light); }
+  .drop-zone.zone-fil { border-color: var(--fil-border); background: var(--fil-light); }
+  .drop-zone.zone-hrf { border-color: var(--hrf-border); background: var(--hrf-light); }
+  .drop-zone.drag-over { transform: scale(1.02); }
+
+  .zone-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    padding: 4px;
+    border-radius: var(--border-radius-md);
+  }
+
+  .zone-ism .zone-label { color: var(--ism-color); background: rgba(24, 95, 165, 0.12); }
+  .zone-fil .zone-label { color: var(--fil-color); background: rgba(59, 109, 17, 0.12); }
+  .zone-hrf .zone-label { color: var(--hrf-color); background: rgba(153, 53, 86, 0.12); }
+
+  .zone-words { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 50px; align-content: flex-start; }
+
+  .zone-word {
+    font-family: 'Amiri', serif;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .zone-ism .zone-word { background: rgba(24, 95, 165, 0.2); color: var(--ism-color); }
+  .zone-fil .zone-word { background: rgba(59, 109, 17, 0.2); color: var(--fil-color); }
+  .zone-hrf .zone-word { background: rgba(153, 53, 86, 0.2); color: var(--hrf-color); }
+
+  .sort-check-btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: all 0.15s;
+  }
+
+  .sort-check-btn:hover { background: var(--color-background-primary); }
+
+  .sort-result {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    display: none;
+  }
+
+  .sort-result.show { display: block; }
+  .sort-result.great { background: var(--fil-light); color: var(--fil-color); }
+  .sort-result.partial { background: var(--gold-light); color: var(--gold); }
+
+  /* SIGNS PANEL */
+  .signs-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .signs-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+  }
+
+  .signs-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-align: center;
+    padding: 6px;
+    border-radius: var(--border-radius-md);
+  }
+
+  .signs-card.ism-card .signs-card-title { color: var(--ism-color); background: var(--ism-light); }
+  .signs-card.fil-card .signs-card-title { color: var(--fil-color); background: var(--fil-light); }
+
+  .sign-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .sign-item:last-child { border-bottom: none; }
+
+  .sign-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .ism-card .sign-dot { background: var(--ism-color); }
+  .fil-card .sign-dot { background: var(--fil-color); }
+
+  .sign-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+  .sign-text strong { color: var(--color-text-primary); font-family: 'Amiri', serif; font-size: 16px; }
+
+  .results-screen {
+    text-align: center;
+    padding: 2rem 1rem;
+    display: none;
+  }
+
+  .results-screen.show { display: block; }
+
+  .results-emoji { font-size: 60px; margin-bottom: 1rem; }
+  .results-score { font-size: 36px; font-weight: 700; color: var(--color-text-primary); margin-bottom: 8px; }
+  .results-msg { font-size: 16px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .restart-btn {
+    padding: 12px 32px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: all 0.15s;
+  }
+  .restart-btn:hover { background: var(--color-background-primary); }
+
+  .sentence-game {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .sentence-display {
+    font-family: 'Amiri', serif;
+    font-size: 24px;
+    text-align: center;
+    line-height: 2.2;
+    margin-bottom: 16px;
+    direction: rtl;
+  }
+
+  .clickable-word {
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+    display: inline-block;
+    margin: 0 2px;
+  }
+
+  .clickable-word:hover { background: var(--color-background-secondary); }
+  .clickable-word.tagged-ism { background: var(--ism-light); border-color: var(--ism-border); color: var(--ism-color); }
+  .clickable-word.tagged-fil { background: var(--fil-light); border-color: var(--fil-border); color: var(--fil-color); }
+  .clickable-word.tagged-hrf { background: var(--hrf-light); border-color: var(--hrf-border); color: var(--hrf-color); }
+
+  .word-type-selector {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .type-sel-btn {
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: all 0.15s;
+  }
+
+  .type-sel-btn:hover { background: var(--color-background-primary); }
+  .type-sel-btn.sel-ism { background: var(--ism-light); border-color: var(--ism-border); color: var(--ism-color); }
+  .type-sel-btn.sel-fil { background: var(--fil-light); border-color: var(--fil-border); color: var(--fil-color); }
+  .type-sel-btn.sel-hrf { background: var(--hrf-light); border-color: var(--hrf-border); color: var(--hrf-color); }
+
+  .sel-active-ism { background: var(--ism-color) !important; color: white !important; }
+  .sel-active-fil { background: var(--fil-color) !important; color: white !important; }
+  .sel-active-hrf { background: var(--hrf-color) !important; color: white !important; }
+
+  .sentence-check-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-secondary);
+    cursor: pointer;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    transition: all 0.15s;
+    margin-top: 8px;
+  }
+
+  .sentence-check-btn:hover { background: var(--color-background-primary); }
+
+  .sentence-feedback {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: var(--border-radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+  }
+
+  .sentence-feedback.show { display: block; }
+  .sentence-feedback.fb-good { background: var(--fil-light); color: var(--fil-color); }
+  .sentence-feedback.fb-ok { background: var(--gold-light); color: var(--gold); }
+
+  @keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .pop { animation: popIn 0.3s ease forwards; }
+</style>
+
+<div class="game-container">
+  <h2 class="sr-only">لعبة تعليمية تفاعلية عن أنواع الكلمة في اللغة العربية: الاسم والفعل والحرف وعلاماتهم</h2>
+
+  <div class="header">
+    <div class="game-title">🌟 عالم الكلمات العربية</div>
+    <div class="game-subtitle">تعلّم الاسم والفعل والحرف بطريقة ممتعة</div>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-item">
+      <span class="score-label">النقاط</span>
+      <span class="score-value" id="totalScore">0</span>
+    </div>
+    <div class="score-item">
+      <span class="score-label">المستوى</span>
+      <span class="score-value" id="levelDisplay">1</span>
+    </div>
+    <div class="score-item">
+      <span class="score-label">النجوم</span>
+      <span class="score-value stars" id="starsDisplay">☆☆☆</span>
+    </div>
+    <div class="score-item">
+      <span class="score-label">التسلسل</span>
+      <span class="score-value" id="streakDisplay">0 🔥</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active-ism" onclick="switchTab('info')" id="tab-info">📖 تعلّم</button>
+    <button class="tab-btn" onclick="switchTab('quiz')" id="tab-quiz">❓ اختبار</button>
+    <button class="tab-btn" onclick="switchTab('sort')" id="tab-sort">🎯 صنّف</button>
+    <button class="tab-btn" onclick="switchTab('signs')" id="tab-signs">🔍 العلامات</button>
+    <button class="tab-btn" onclick="switchTab('sentence')" id="tab-sentence">✍️ جُمل</button>
+  </div>
+
+  <!-- INFO PANEL -->
+  <div class="panel active" id="panel-info">
+    <div class="info-section">
+      <div class="info-header">
+        <span class="type-icon">🏠</span>
+        <span class="type-badge badge-ism">الاسم</span>
+        <span class="info-title">ما دلّ على معنى في نفسه بدون زمن</span>
+      </div>
+      <p class="info-desc">
+        الاسم هو كلمة تدلّ على شخص أو مكان أو شيء أو حيوان أو فكرة، ولا تتضمّن زمناً محدّداً. يمكنك أن تضع قبله "الـ" أو تنوّنه.
+      </p>
+      <div class="examples-row">
+        <span class="example-word word-ism">محمدٌ</span>
+        <span class="example-word word-ism">المدرسةُ</span>
+        <span class="example-word word-ism">كتابٌ</span>
+        <span class="example-word word-ism">شجرةٌ</span>
+        <span class="example-word word-ism">قاهرةُ</span>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="sign-card" style="flex:1; min-width:100px;">
+          <div class="sign-emoji">🔤</div>
+          <div class="sign-name">يقبل التنوين</div>
+          <div class="sign-example">كتابٌ، ولدٌ</div>
+        </div>
+        <div class="sign-card" style="flex:1; min-width:100px;">
+          <div class="sign-emoji">🅰️</div>
+          <div class="sign-name">يقبل "الـ"</div>
+          <div class="sign-example">الكتابُ، الولدُ</div>
+        </div>
+        <div class="sign-card" style="flex:1; min-width:100px;">
+          <div class="sign-emoji">📌</div>
+          <div class="sign-name">يسبقه حرف جر</div>
+          <div class="sign-example">في المدرسة</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-header">
+        <span class="type-icon">⚡</span>
+        <span class="type-badge badge-fil">الفعل</span>
+        <span class="info-title">ما دلّ على معنى مقترن بزمن</span>
+      </div>
+      <p class="info-desc">
+        الفعل كلمة تدلّ على حدث وقع في زمن معيّن. وهو ثلاثة أنواع: <strong>ماضٍ</strong> (ذهبَ) ● <strong>مضارع</strong> (يذهبُ) ● <strong>أمر</strong> (اذهبْ)
+      </p>
+      <div class="examples-row">
+        <span class="example-word word-fil">كتبَ</span>
+        <span class="example-word word-fil">يقرأُ</span>
+        <span class="example-word word-fil">اجلسْ</span>
+        <span class="example-word word-fil">لعبَ</span>
+        <span class="example-word word-fil">يتعلّمُ</span>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="sign-card" style="flex:1; min-width:90px;">
+          <div class="sign-emoji">⏮️</div>
+          <div class="sign-name">تاء التأنيث</div>
+          <div class="sign-example">كتبَتْ</div>
+        </div>
+        <div class="sign-card" style="flex:1; min-width:90px;">
+          <div class="sign-emoji">🔮</div>
+          <div class="sign-name">يقبل السين</div>
+          <div class="sign-example">سيكتبُ</div>
+        </div>
+        <div class="sign-card" style="flex:1; min-width:90px;">
+          <div class="sign-emoji">🚫</div>
+          <div class="sign-name">يقبل "لم"</div>
+          <div class="sign-example">لم يكتبْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div class="info-header">
+        <span class="type-icon">🔗</span>
+        <span class="type-badge badge-hrf">الحرف</span>
+        <span class="info-title">ما لا يظهر معناه إلا مع غيره</span>
+      </div>
+      <p class="info-desc">
+        الحرف كلمة لا معنى لها بمفردها، ومعناها يظهر فقط حين تُربط بكلمات أخرى. ولا يقبل الحرف علامات الاسم ولا علامات الفعل.
+      </p>
+      <div class="examples-row">
+        <span class="example-word word-hrf">في</span>
+        <span class="example-word word-hrf">مِن</span>
+        <span class="example-word word-hrf">إلى</span>
+        <span class="example-word word-hrf">عن</span>
+        <span class="example-word word-hrf">لا</span>
+        <span class="example-word word-hrf">و</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ PANEL -->
+  <div class="panel" id="panel-quiz">
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-progress" id="quizProgressText">السؤال 1 من 12</div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill" style="width:8%"></div></div>
+      <div class="quiz-question">ما نوع هذه الكلمة؟</div>
+      <div class="quiz-word" id="quizWord">محمدٌ</div>
+      <div class="quiz-hint" id="quizHint">تلميح: يمكن وضع "الـ" قبلها</div>
+      <div class="quiz-options">
+        <button class="option-btn" id="opt0" onclick="checkAnswer(0)">
+          <span class="option-icon">🏠</span>اسم
+        </button>
+        <button class="option-btn" id="opt1" onclick="checkAnswer(1)">
+          <span class="option-icon">⚡</span>فعل
+        </button>
+        <button class="option-btn" id="opt2" onclick="checkAnswer(2)">
+          <span class="option-icon">🔗</span>حرف
+        </button>
+      </div>
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي ←</button>
+    </div>
+    <div class="results-screen" id="resultsScreen">
+      <div class="results-emoji" id="resultsEmoji">🎉</div>
+      <div class="results-score" id="resultsScore">10 / 12</div>
+      <div class="results-msg" id="resultsMsg">أداء رائع! أنت نجم النحو!</div>
+      <button class="restart-btn" onclick="restartQuiz()">العب مرة أخرى 🔄</button>
+    </div>
+  </div>
+
+  <!-- SORT PANEL -->
+  <div class="panel" id="panel-sort">
+    <div class="sort-container">
+      <div class="sort-title">🎯 صنّف الكلمات</div>
+      <div class="sort-subtitle">اسحب كل كلمة إلى المكان الصحيح</div>
+      <div class="word-bank" id="wordBank"></div>
+      <div class="drop-zones">
+        <div class="drop-zone zone-ism" id="zone-ism" ondragover="dragOver(event)" ondrop="dropWord(event,'ism')">
+          <div class="zone-label">🏠 الاسم</div>
+          <div class="zone-words" id="zone-ism-words"></div>
+        </div>
+        <div class="drop-zone zone-fil" id="zone-fil" ondragover="dragOver(event)" ondrop="dropWord(event,'fil')">
+          <div class="zone-label">⚡ الفعل</div>
+          <div class="zone-words" id="zone-fil-words"></div>
+        </div>
+        <div class="drop-zone zone-hrf" id="zone-hrf" ondragover="dragOver(event)" ondrop="dropWord(event,'hrf')">
+          <div class="zone-label">🔗 الحرف</div>
+          <div class="zone-words" id="zone-hrf-words"></div>
+        </div>
+      </div>
+      <button class="sort-check-btn" onclick="checkSort()">✅ تحقّق من الإجابات</button>
+      <div class="sort-result" id="sortResult"></div>
+    </div>
+  </div>
+
+  <!-- SIGNS PANEL -->
+  <div class="panel" id="panel-signs">
+    <div class="signs-section">
+      <div class="signs-card ism-card">
+        <div class="signs-card-title">🏠 علامات الاسم</div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يقبل التنوين: <strong>ولدٌ، كتابٌ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يقبل "الـ": <strong>الولدُ، الكتابُ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يسبقه حرف الجر: <strong>في البيتِ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يأتي منادىً: <strong>يا محمدُ</strong></div>
+        </div>
+      </div>
+      <div class="signs-card fil-card">
+        <div class="signs-card-title">⚡ علامات الفعل</div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">تاء التأنيث الساكنة: <strong>كتبَتْ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">تاء الفاعل: <strong>كتبتُ، كتبتَ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يقبل "لم": <strong>لم يذهبْ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">يقبل السين: <strong>سيكتبُ</strong></div>
+        </div>
+        <div class="sign-item">
+          <div class="sign-dot"></div>
+          <div class="sign-text">نون النسوة / ياء المخاطبة: <strong>اكتبي، يكتبن</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <div style="font-size:15px; font-weight:700; color:var(--hrf-color); text-align:center; margin-bottom:12px; background:var(--hrf-light); padding:8px; border-radius:var(--border-radius-md);">🔗 الحرف لا علامة له!</div>
+      <p style="font-size:13px; color:var(--color-text-secondary); line-height:1.8; text-align:center;">
+        الحرف ليس له علامات خاصة به. وأفضل طريقة لمعرفته هو أنه لا يقبل علامات الاسم ولا علامات الفعل. 
+        <br>فإذا كانت الكلمة لا تقبل "الـ" ولا التنوين، ولا تقبل تاء التأنيث الساكنة أو "لم"، فهي حرف!
+      </p>
+      <div class="examples-row" style="justify-content:center; margin-top:12px;">
+        <span class="example-word word-hrf">في</span>
+        <span class="example-word word-hrf">مِن</span>
+        <span class="example-word word-hrf">إلى</span>
+        <span class="example-word word-hrf">لكنّ</span>
+        <span class="example-word word-hrf">هل</span>
+        <span class="example-word word-hrf">ثم</span>
+      </div>
+    </div>
+
+    <!-- Signs Quiz -->
+    <div class="sentence-game">
+      <div style="font-size:14px; font-weight:700; color:var(--color-text-primary); text-align:center; margin-bottom:12px;">🧪 اختبر علامات الاسم</div>
+      <div style="font-size:13px; color:var(--color-text-secondary); text-align:center; margin-bottom:14px;">أيّ من هذه العلامات يُثبت أن الكلمة اسم؟</div>
+      <div id="signsQuizContent"></div>
+    </div>
+  </div>
+
+  <!-- SENTENCE PANEL -->
+  <div class="panel" id="panel-sentence">
+    <div class="sentence-game">
+      <div style="font-size:14px; font-weight:700; color:var(--color-text-primary); text-align:center; margin-bottom:6px;">✍️ لوّن الجملة</div>
+      <div style="font-size:12px; color:var(--color-text-secondary); text-align:center; margin-bottom:14px;">اختر نوع الكلمة، ثم انقر عليها لتلوينها</div>
+
+      <div class="word-type-selector">
+        <button class="type-sel-btn sel-ism" id="selIsm" onclick="selectType('ism')">🏠 اسم</button>
+        <button class="type-sel-btn sel-fil" id="selFil" onclick="selectType('fil')">⚡ فعل</button>
+        <button class="type-sel-btn sel-hrf" id="selHrf" onclick="selectType('hrf')">🔗 حرف</button>
+        <button class="type-sel-btn" id="selNone" onclick="selectType('none')">🧹 مسح</button>
+      </div>
+
+      <div id="sentenceSelector" style="margin-bottom:10px; text-align:center;">
+        <select id="sentenceSelect" style="padding:6px 12px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-secondary); font-family:'Cairo',sans-serif; font-size:13px; background:var(--color-background-secondary); color:var(--color-text-primary);" onchange="loadSentence()"></select>
+      </div>
+
+      <div class="sentence-display" id="sentenceDisplay"></div>
+
+      <button class="sentence-check-btn" onclick="checkSentence()">✅ تحقّق من التلوين</button>
+      <div class="sentence-feedback" id="sentenceFeedback"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var totalScore = 0;
+var streak = 0;
+var level = 1;
+
+var quizData = [
+  { word: 'محمدٌ', type: 'ism', hint: 'يقبل التنوين ويقبل "الـ"' },
+  { word: 'كتبَ', type: 'fil', hint: 'يقبل تاء التأنيث: كتبَتْ' },
+  { word: 'في', type: 'hrf', hint: 'لا يقبل علامات الاسم ولا الفعل' },
+  { word: 'الشمسُ', type: 'ism', hint: 'بدأ بـ "الـ" فهو اسم' },
+  { word: 'يلعبُ', type: 'fil', hint: 'يبدأ بحرف مضارعة' },
+  { word: 'مِن', type: 'hrf', hint: 'حرف جر لا معنى له وحده' },
+  { word: 'مدرسةٌ', type: 'ism', hint: 'يقبل التنوين والتعريف' },
+  { word: 'اجلسْ', type: 'fil', hint: 'فعل أمر، يقبل ياء المخاطبة: اجلسي' },
+  { word: 'إلى', type: 'hrf', hint: 'حرف جر' },
+  { word: 'قمرٌ', type: 'ism', hint: 'يمكن القول: القمرُ' },
+  { word: 'ذهبَ', type: 'fil', hint: 'فعل ماضٍ، يقبل تاء التأنيث: ذهبَتْ' },
+  { word: 'هل', type: 'hrf', hint: 'حرف استفهام' }
+];
+
+var currentQ = 0;
+var answered = false;
+var correctCount = 0;
+
+function checkAnswer(option) {
+  if (answered) return;
+  answered = true;
+  var types = ['ism', 'fil', 'hrf'];
+  var correct = quizData[currentQ].type;
+  var chosen = types[option];
+  var btns = ['opt0','opt1','opt2'];
+  var correctIdx = types.indexOf(correct);
+  document.getElementById(btns[correctIdx]).classList.add('correct');
+  if (chosen === correct) {
+    correctCount++;
+    streak++;
+    totalScore += 10 + (streak > 2 ? 5 : 0);
+    document.getElementById('feedbackMsg').textContent = streak > 2 ? '🔥 تسلسل رائع! +' + (10+(streak>2?5:0)) + ' نقطة' : '✅ صحيح! +10 نقاط';
+    document.getElementById('feedbackMsg').className = 'feedback-msg correct-msg pop';
+  } else {
+    streak = 0;
+    document.getElementById(btns[option]).classList.add('wrong');
+    document.getElementById('feedbackMsg').textContent = '❌ الجواب: ' + (correct==='ism'?'اسم':correct==='fil'?'فعل':'حرف');
+    document.getElementById('feedbackMsg').className = 'feedback-msg wrong-msg';
+  }
+  updateScoreBar();
+  document.getElementById('nextBtn').style.display = 'inline-block';
+  for(var i=0;i<3;i++) document.getElementById(btns[i]).disabled = true;
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= quizData.length) {
+    showResults(); return;
+  }
+  answered = false;
+  var q = quizData[currentQ];
+  document.getElementById('quizWord').textContent = q.word;
+  document.getElementById('quizHint').textContent = 'تلميح: ' + q.hint;
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('feedbackMsg').className = 'feedback-msg';
+  document.getElementById('nextBtn').style.display = 'none';
+  var pct = Math.round((currentQ/quizData.length)*100);
+  document.getElementById('quizProgressFill').style.width = pct + '%';
+  document.getElementById('quizProgressText').textContent = 'السؤال ' + (currentQ+1) + ' من ' + quizData.length;
+  var btns = ['opt0','opt1','opt2'];
+  for(var i=0;i<3;i++) {
+    document.getElementById(btns[i]).classList.remove('correct','wrong');
+    document.getElementById(btns[i]).disabled = false;
+  }
+}
+
+function showResults() {
+  document.getElementById('quizCard').style.display = 'none';
+  var rs = document.getElementById('resultsScreen');
+  rs.classList.add('show');
+  var pct = Math.round((correctCount/quizData.length)*100);
+  document.getElementById('resultsScore').textContent = correctCount + ' / ' + quizData.length;
+  if (pct >= 90) { document.getElementById('resultsEmoji').textContent='🏆'; document.getElementById('resultsMsg').textContent='ممتاز! أنت نجم النحو العربي!'; }
+  else if (pct >= 70) { document.getElementById('resultsEmoji').textContent='🌟'; document.getElementById('resultsMsg').textContent='أداء جيد جداً! استمر في التعلم!'; }
+  else { document.getElementById('resultsEmoji').textContent='💪'; document.getElementById('resultsMsg').textContent='لا بأس! راجع الدروس وحاول مرة أخرى!'; }
+  var stars = pct>=90?'⭐⭐⭐':pct>=70?'⭐⭐☆':'⭐☆☆';
+  document.getElementById('starsDisplay').textContent = stars;
+}
+
+function restartQuiz() {
+  currentQ = 0; answered = false; correctCount = 0;
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('resultsScreen').classList.remove('show');
+  var q = quizData[0];
+  document.getElementById('quizWord').textContent = q.word;
+  document.getElementById('quizHint').textContent = 'تلميح: ' + q.hint;
+  document.getElementById('feedbackMsg').textContent = '';
+  document.getElementById('quizProgressFill').style.width = '8%';
+  document.getElementById('quizProgressText').textContent = 'السؤال 1 من ' + quizData.length;
+  document.getElementById('nextBtn').style.display = 'none';
+  var btns=['opt0','opt1','opt2'];
+  for(var i=0;i<3;i++){document.getElementById(btns[i]).classList.remove('correct','wrong');document.getElementById(btns[i]).disabled=false;}
+}
+
+// SORT GAME
+var sortWords = [
+  {word:'الكتابُ',type:'ism'},{word:'قرأَ',type:'fil'},{word:'عن',type:'hrf'},
+  {word:'طالبٌ',type:'ism'},{word:'يكتبُ',type:'fil'},{word:'مِن',type:'hrf'},
+  {word:'سماءٌ',type:'ism'},{word:'نامَ',type:'fil'},{word:'ثم',type:'hrf'},
+  {word:'نهرٌ',type:'ism'},{word:'افتحْ',type:'fil'},{word:'لكنّ',type:'hrf'}
+];
+
+var draggedWord = null;
+var zoneContents = {ism:[], fil:[], hrf:[]};
+
+function initSort() {
+  var bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  zoneContents = {ism:[], fil:[], hrf:[]};
+  ['zone-ism-words','zone-fil-words','zone-hrf-words'].forEach(function(id){ document.getElementById(id).innerHTML=''; });
+  document.getElementById('sortResult').className='sort-result';
+  document.getElementById('sortResult').style.display='none';
+  var shuffled = sortWords.slice().sort(function(){return Math.random()-0.5;});
+  shuffled.forEach(function(w) {
+    var el = document.createElement('div');
+    el.className = 'draggable-word';
+    el.textContent = w.word;
+    el.draggable = true;
+    el.dataset.type = w.type;
+    el.dataset.word = w.word;
+    el.addEventListener('dragstart', function(e) {
+      draggedWord = {word: w.word, type: w.type, el: el};
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', function() { el.classList.remove('dragging'); });
+    el.addEventListener('touchstart', handleTouchStart, {passive:true});
+    bank.appendChild(el);
+  });
+}
+
+function dragOver(e) { e.preventDefault(); }
+
+function dropWord(e, zone) {
+  e.preventDefault();
+  if (!draggedWord) return;
+  if (zoneContents[zone].indexOf(draggedWord.word) < 0) {
+    zoneContents[zone].push(draggedWord.word);
+    var wEl = document.createElement('span');
+    wEl.className = 'zone-word';
+    wEl.textContent = draggedWord.word;
+    wEl.dataset.word = draggedWord.word;
+    wEl.dataset.type = draggedWord.type;
+    wEl.title = 'انقر للإزالة';
+    wEl.addEventListener('click', function(){
+      var idx = zoneContents[zone].indexOf(draggedWord.word);
+      if(idx>-1) zoneContents[zone].splice(idx,1);
+      wEl.parentNode.removeChild(wEl);
+    });
+    document.getElementById('zone-'+zone+'-words').appendChild(wEl);
+    if (draggedWord.el.parentNode) draggedWord.el.parentNode.removeChild(draggedWord.el);
+  }
+  draggedWord = null;
+}
+
+function handleTouchStart(e) {
+  var el = e.currentTarget;
+  var data = {word: el.dataset.word, type: el.dataset.type, el: el};
+  el.style.opacity = '0.5';
+  ['zone-ism','zone-fil','zone-hrf'].forEach(function(zid) {
+    document.getElementById(zid).addEventListener('click', function zoneClick(ev) {
+      var zone = zid.replace('zone-','');
+      if (zoneContents[zone].indexOf(data.word) < 0) {
+        zoneContents[zone].push(data.word);
+        var wEl = document.createElement('span');
+        wEl.className = 'zone-word';
+        wEl.textContent = data.word;
+        wEl.addEventListener('click', function(){
+          var idx = zoneContents[zone].indexOf(data.word);
+          if(idx>-1) zoneContents[zone].splice(idx,1);
+          wEl.parentNode.removeChild(wEl);
+        });
+        document.getElementById(zid+'-words').appendChild(wEl);
+        if (data.el.parentNode) data.el.parentNode.removeChild(data.el);
+        data.el.style.opacity = '1';
+      }
+      document.getElementById(zid).removeEventListener('click', zoneClick);
+    }, {once:true});
+  });
+}
+
+function checkSort() {
+  var correct = 0; var total = sortWords.length;
+  sortWords.forEach(function(w) {
+    if (zoneContents[w.type] && zoneContents[w.type].indexOf(w.word) >= 0) correct++;
+  });
+  var pct = Math.round((correct/total)*100);
+  totalScore += correct * 5;
+  updateScoreBar();
+  var res = document.getElementById('sortResult');
+  res.style.display = 'block';
+  if (pct >= 90) { res.className='sort-result show great'; res.textContent = '🏆 ممتاز! ' + correct + ' من ' + total + ' صحيح! +' + (correct*5) + ' نقطة'; }
+  else { res.className='sort-result show partial'; res.textContent = '👍 أحسنت! ' + correct + ' من ' + total + ' صحيح. حاول مرة أخرى!'; }
+}
+
+// SENTENCE GAME
+var sentences = [
+  {
+    text: 'ذهبَ الطالبُ إلى المدرسةِ',
+    words: [
+      {word:'ذهبَ', type:'fil'},
+      {word:'الطالبُ', type:'ism'},
+      {word:'إلى', type:'hrf'},
+      {word:'المدرسةِ', type:'ism'}
+    ]
+  },
+  {
+    text: 'قرأَ محمدٌ كتاباً في البيتِ',
+    words: [
+      {word:'قرأَ', type:'fil'},
+      {word:'محمدٌ', type:'ism'},
+      {word:'كتاباً', type:'ism'},
+      {word:'في', type:'hrf'},
+      {word:'البيتِ', type:'ism'}
+    ]
+  },
+  {
+    text: 'يلعبُ الأولادُ في الحديقةِ',
+    words: [
+      {word:'يلعبُ', type:'fil'},
+      {word:'الأولادُ', type:'ism'},
+      {word:'في', type:'hrf'},
+      {word:'الحديقةِ', type:'ism'}
+    ]
+  },
+  {
+    text: 'جاءَ المعلمُ من المدينةِ',
+    words: [
+      {word:'جاءَ', type:'fil'},
+      {word:'المعلمُ', type:'ism'},
+      {word:'من', type:'hrf'},
+      {word:'المدينةِ', type:'ism'}
+    ]
+  }
+];
+
+var selectedType = 'ism';
+var currentSentence = 0;
+var wordTags = {};
+
+function initSentences() {
+  var sel = document.getElementById('sentenceSelect');
+  sel.innerHTML = '';
+  sentences.forEach(function(s, i) {
+    var op = document.createElement('option');
+    op.value = i;
+    op.textContent = (i+1) + '. ' + s.text;
+    sel.appendChild(op);
+  });
+  loadSentence();
+}
+
+function loadSentence() {
+  currentSentence = parseInt(document.getElementById('sentenceSelect').value) || 0;
+  wordTags = {};
+  renderSentence();
+  document.getElementById('sentenceFeedback').className = 'sentence-feedback';
+}
+
+function renderSentence() {
+  var s = sentences[currentSentence];
+  var container = document.getElementById('sentenceDisplay');
+  container.innerHTML = '';
+  s.words.forEach(function(w, i) {
+    var span = document.createElement('span');
+    span.className = 'clickable-word';
+    span.textContent = w.word;
+    span.dataset.idx = i;
+    var tag = wordTags[i];
+    if (tag) span.classList.add('tagged-' + tag);
+    span.addEventListener('click', function() {
+      if (selectedType === 'none') {
+        delete wordTags[i];
+        span.className = 'clickable-word';
+      } else {
+        wordTags[i] = selectedType;
+        span.className = 'clickable-word tagged-' + selectedType;
+      }
+    });
+    container.appendChild(span);
+  });
+}
+
+function selectType(type) {
+  selectedType = type;
+  ['selIsm','selFil','selHrf','selNone'].forEach(function(id){ document.getElementById(id).className = document.getElementById(id).className.replace(/ sel-active-\w+/g,''); });
+  if (type !== 'none') document.getElementById('sel' + (type==='ism'?'Ism':type==='fil'?'Fil':'Hrf')).className += ' sel-active-' + type;
+}
+
+function checkSentence() {
+  var s = sentences[currentSentence];
+  var correct = 0;
+  s.words.forEach(function(w, i) {
+    if (wordTags[i] === w.type) correct++;
+  });
+  totalScore += correct * 8;
+  updateScoreBar();
+  var fb = document.getElementById('sentenceFeedback');
+  fb.classList.add('show');
+  if (correct === s.words.length) {
+    fb.className = 'sentence-feedback show fb-good';
+    fb.textContent = '🌟 ممتاز! جميع الكلمات صحيحة! +' + (correct*8) + ' نقطة';
+  } else {
+    fb.className = 'sentence-feedback show fb-ok';
+    fb.textContent = '👍 أحسنت! ' + correct + ' من ' + s.words.length + ' صحيح. +' + (correct*8) + ' نقطة';
+  }
+}
+
+// SIGNS QUIZ
+var signsQuizData = [
+  { q: 'أيّ من هذه العبارات تُثبت أن "كتاب" اسمٌ؟', options:['كتبَتْ كتاب ✓', 'الكتابُ ✓ (يقبل الـ)', 'لم كتاب', 'سيكتاب'], correct:1 },
+  { q: 'ما العلامة التي تُثبت أن الكلمة فعلٌ؟', options:['قبول "الـ"', 'قبول التنوين', 'قبول تاء الفاعل', 'قبول حرف الجر'], correct:2 },
+  { q: 'أيّ من هذه الكلمات يقبل التنوين؟', options:['في', 'كتبَ', 'قلمٌ', 'هل'], correct:2 },
+  { q: 'كيف تعرف أن الكلمة حرفٌ؟', options:['تقبل التنوين', 'تقبل تاء التأنيث', 'لا تقبل علامات الاسم ولا الفعل', 'تقبل "الـ"'], correct:2 }
+];
+
+var signsQ = 0;
+var signsAnswered = false;
+
+function initSignsQuiz() {
+  signsQ = 0; signsAnswered = false;
+  renderSignsQ();
+}
+
+function renderSignsQ() {
+  if (signsQ >= signsQuizData.length) {
+    document.getElementById('signsQuizContent').innerHTML = '<div style="text-align:center;padding:16px;font-size:15px;font-weight:700;color:var(--fil-color);">🏆 أتقنت علامات الكلمات! +40 نقطة</div>';
+    totalScore += 40; updateScoreBar(); return;
+  }
+  var d = signsQuizData[signsQ];
+  var html = '<div style="font-size:13px;color:var(--color-text-primary);font-weight:600;margin-bottom:12px;text-align:center;">' + (signsQ+1) + '. ' + d.q + '</div>';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">';
+  d.options.forEach(function(opt, i) {
+    html += '<button style="padding:10px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);cursor:pointer;font-family:Cairo,sans-serif;font-size:12px;color:var(--color-text-primary);text-align:center;" onclick="answerSignsQ('+i+')" id="sq'+i+'">' + opt + '</button>';
+  });
+  html += '</div>';
+  html += '<div id="signsFb" style="font-size:13px;font-weight:700;text-align:center;min-height:20px;"></div>';
+  html += '<button id="signsNext" style="display:none;margin-top:8px;padding:8px 20px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-secondary);cursor:pointer;font-family:Cairo,sans-serif;font-size:13px;font-weight:600;color:var(--color-text-primary);" onclick="nextSignsQ()">التالي ←</button>';
+  document.getElementById('signsQuizContent').innerHTML = html;
+  signsAnswered = false;
+}
+
+function answerSignsQ(i) {
+  if (signsAnswered) return;
+  signsAnswered = true;
+  var d = signsQuizData[signsQ];
+  document.getElementById('sq'+d.correct).style.background='var(--fil-light)';
+  document.getElementById('sq'+d.correct).style.borderColor='var(--fil-border)';
+  document.getElementById('sq'+d.correct).style.color='var(--fil-color)';
+  if (i !== d.correct) {
+    document.getElementById('sq'+i).style.background='#FCEBEB';
+    document.getElementById('sq'+i).style.borderColor='#E24B4A';
+    document.getElementById('sq'+i).style.color='#A32D2D';
+    document.getElementById('signsFb').style.color='#A32D2D';
+    document.getElementById('signsFb').textContent='❌ الجواب الصحيح محدد بالأخضر';
+  } else {
+    totalScore += 10; updateScoreBar();
+    document.getElementById('signsFb').style.color='var(--fil-color)';
+    document.getElementById('signsFb').textContent='✅ صحيح! +10 نقاط';
+  }
+  document.getElementById('signsNext').style.display='inline-block';
+  for(var j=0;j<4;j++){ var b=document.getElementById('sq'+j); if(b) b.disabled=true; }
+}
+
+function nextSignsQ() { signsQ++; renderSignsQ(); }
+
+function updateScoreBar() {
+  document.getElementById('totalScore').textContent = totalScore;
+  level = Math.floor(totalScore/50)+1;
+  document.getElementById('levelDisplay').textContent = level;
+  document.getElementById('streakDisplay').textContent = streak + ' 🔥';
+  var stars = totalScore>=200?'⭐⭐⭐':totalScore>=100?'⭐⭐☆':'⭐☆☆';
+  document.getElementById('starsDisplay').textContent = stars;
+}
+
+function switchTab(tab) {
+  ['info','quiz','sort','signs','sentence'].forEach(function(t){
+    document.getElementById('panel-'+t).classList.remove('active');
+    document.getElementById('tab-'+t).className='tab-btn';
+  });
+  document.getElementById('panel-'+tab).classList.add('active');
+  var classes={info:'active-ism',quiz:'active-fil',sort:'active-challenge',signs:'active-signs',sentence:'active-hrf'};
+  document.getElementById('tab-'+tab).classList.add(classes[tab]);
+}
+
+initSort();
+initSentences();
+initSignsQuiz();
+</script>
